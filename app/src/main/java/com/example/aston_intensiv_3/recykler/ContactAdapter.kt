@@ -28,7 +28,6 @@ class ContactAdapter(
 
         clickedPosition = holder.adapterPosition
 
-// TODO: убрать тосты
         binding.root.setOnClickListener {
 
             clickedPosition = holder.adapterPosition
