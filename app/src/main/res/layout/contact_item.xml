@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Номер  Ид"
+        android:text="@string/NumId"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="."
+        android:text="@string/dot"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/idTextView"
@@ -72,13 +72,6 @@
         app:layout_constraintTop_toBottomOf="@+id/firstNameTextView"
         app:layout_constraintVertical_bias="1.0"
         tools:text="Номер" />
-
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

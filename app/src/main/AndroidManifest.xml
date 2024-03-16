@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Aston_intensiv_3"
         tools:targetApi="34">
         <activity
-            android:name="com.example.newrecycler.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
