@@ -5,4 +5,13 @@
     <string name="delete">Удалить</string>
     <string name="NumId">Номер Ид</string>
     <string name="dot">.</string>
+    <string name="editContacts">Редактирование контакта:</string>
+    <string name="id">Id.</string>
+    <string name="cancel">CANCEL</string>
+    <string name="Name">Имя</string>
+    <string name="ok">OK</string>
+    <string name="phone">Телефон</string>
+    <string name="family">Фамилия</string>
+    <string name="addContact">Добавление контакта:</string>
+    <string name="num">Номер</string>
 </resources>

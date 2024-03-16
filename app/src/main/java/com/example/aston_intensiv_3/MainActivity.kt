@@ -2,12 +2,9 @@ package com.example.aston_intensiv_3
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
@@ -68,7 +65,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         buttonCancelDelete = binding.cancelDeleteButton
 
         initDragAndDrop()
-
         click()
     }
 
@@ -104,7 +100,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         outState.putBoolean("isStartEditKey", isStartEdit)
         outState.putBoolean("isStartDelKey", isStartDel)
         outState.putBoolean("adapterIsStartDelKey", adapter.isStartDel)
-
         outState.putBooleanArray("adapterSelectsKey", adapter.selects)
         outState.putIntArray("adapterListPosToDelKey", adapter.listPosToDel.toIntArray())
 
@@ -114,107 +109,31 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         contacts = savedInstanceState.getParcelableArrayList("contactsKey")!!
-        clickedPosition = savedInstanceState.getInt("clickedPositionKey")!!
-
+        clickedPosition = savedInstanceState.getInt("clickedPositionKey")
         adapter.submitList(contacts)
-
         isStartAdd = savedInstanceState.getBoolean("isStartAddKey")
         isStartEdit = savedInstanceState.getBoolean("isStartEditKey")
         isStartDel = savedInstanceState.getBoolean("isStartDelKey")
         adapter.isStartDel = savedInstanceState.getBoolean("adapterIsStartDelKey")
-
         adapter.selects = savedInstanceState.getBooleanArray("adapterSelectsKey")!!
-
-        var listPosToDel = savedInstanceState.getIntArray("adapterListPosToDelKey")
+        val listPosToDel = savedInstanceState.getIntArray("adapterListPosToDelKey")
         if (listPosToDel != null) {
             adapter.listPosToDel = listPosToDel.toMutableList()
         }
-
         if (isStartDel) {
             startDel()
         }
         if (isStartAdd) {
-            onRestoreAddDialog()
+            openDialogAdd()
         }
-
         if (isStartEdit) {
-            onRestoreEditDialog()
-        }
-    }
-
-    private fun onRestoreAddDialog() {
-        isStartAdd = true
-        val dialogBinding = AddDialogBinding.inflate(layoutInflater)
-
-        val myDialog = Dialog(this)
-        myDialog.setContentView(dialogBinding.root)
-        myDialog.setCancelable(true)
-        myDialog.show()
-
-        val addFirstNameDialET = dialogBinding.addFirstNameDialET
-        val addLastNameDialET = dialogBinding.addLastNameDialET
-        val addPhoneDialET = dialogBinding.addPhoneDialET
-        val okAddDialButton = dialogBinding.okAddDialButton
-        val cancelAddDialButton = dialogBinding.cancelAddDialButton
-
-        okAddDialButton.setOnClickListener {
-
-            contacts = ArrayList(contacts)
-            contacts.add(
-                ContactModel(
-                    contacts.last().id + 1, "${addFirstNameDialET.text}",
-                    "${addLastNameDialET.text}", "${addPhoneDialET.text}", false
-                )
-            )
-
-            adapter.submitList(contacts)
-            isStartAdd = false
-            myDialog.dismiss()
-        }
-        cancelAddDialButton.setOnClickListener {
-            isStartAdd = false
-            myDialog.dismiss()
-        }
-    }
-
-    private fun onRestoreEditDialog() {
-        isStartEdit = true
-        val dialogBinding = EditDialogBinding.inflate(layoutInflater)
-        val myDialog = Dialog(this)
-        myDialog.setContentView(dialogBinding.root)
-        myDialog.setCancelable(true)
-        myDialog.show()
-
-        val idDialTextView = dialogBinding.idDialTextView
-        idDialTextView.text = contacts[clickedPosition].id.toString()
-        val firstNameDialET = dialogBinding.firstNameDialET
-        firstNameDialET.setText(contacts[clickedPosition].firstName)
-        val lastNameDialTV = dialogBinding.lastNameDialTV
-        lastNameDialTV.setText(contacts[clickedPosition].lastName)
-        val phoneDialTV = dialogBinding.phoneDialTV
-        phoneDialTV.setText(contacts[clickedPosition].phoneNumber)
-        val btnOkDialog = dialogBinding.okDialButton
-        val btnCancelDialog = dialogBinding.cancelDialButton
-
-        btnOkDialog.setOnClickListener {
-            contacts = ArrayList(contacts)
-            contacts[clickedPosition].firstName = firstNameDialET.text.toString()
-            contacts[clickedPosition].lastName = lastNameDialTV.text.toString()
-            contacts[clickedPosition].phoneNumber = phoneDialTV.text.toString()
-            adapter.notifyItemChanged(clickedPosition)
-            adapter.submitList(contacts)
-            isStartEdit = false
-            myDialog.dismiss()
-        }
-        btnCancelDialog.setOnClickListener {
-            isStartEdit = false
-            myDialog.dismiss()
+            openDialogEdit()
         }
     }
 
     private fun clickList() {
         if (!isStartDel) {
-            openDialogEdit(findViewById<View>(R.id.item))
+            openDialogEdit()
         }
     }
 
@@ -223,18 +142,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         buttonAdd.setOnClickListener {
             openDialogAdd()
         }
-
         buttonDelete.setOnClickListener {
             startDel()
         }
-
         buttonCancelDelete.setOnClickListener {
             isStartDel = false
             buttonAdd.isGone = false
             buttonOkDelete.isGone = true
             buttonCancelDelete.isGone = true
             adapter.isStartDel = false
-
         }
         buttonOkDelete.setOnClickListener {
             contacts = ArrayList(contacts)
@@ -250,7 +166,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             adapter.isStartDel = false
         }
     }
-
     private fun startDel() {
         Toast.makeText(this, getString(R.string.setContacts), Toast.LENGTH_SHORT).show()
         isStartDel = true
@@ -293,27 +208,24 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
     }
 
-    private fun openDialogEdit(view: View) {
-//todo объединить опендиалоги
+    private fun openDialogEdit() {
         isStartEdit = true
-
-        val inflater = LayoutInflater.from(view.context)
-        val dialogBinding = inflater.inflate(R.layout.edit_dialog, null)
-        val myDialog = Dialog(view.context)
-        myDialog.setContentView(dialogBinding)
+        val dialogBinding = EditDialogBinding.inflate(layoutInflater)
+        val myDialog = Dialog(this)
+        myDialog.setContentView(dialogBinding.root)
         myDialog.setCancelable(true)
         myDialog.show()
 
-        val idDialTextView = dialogBinding.findViewById<TextView>(R.id.idDialTextView)
+        val idDialTextView = dialogBinding.idDialTextView
         idDialTextView.text = contacts[clickedPosition].id.toString()
-        val firstNameDialET = dialogBinding.findViewById<EditText>(R.id.firstNameDialET)
+        val firstNameDialET = dialogBinding.firstNameDialET
         firstNameDialET.setText(contacts[clickedPosition].firstName)
-        val lastNameDialTV = dialogBinding.findViewById<EditText>(R.id.lastNameDialTV)
+        val lastNameDialTV = dialogBinding.lastNameDialTV
         lastNameDialTV.setText(contacts[clickedPosition].lastName)
-        val phoneDialTV = dialogBinding.findViewById<EditText>(R.id.phoneDialTV)
+        val phoneDialTV = dialogBinding.phoneDialTV
         phoneDialTV.setText(contacts[clickedPosition].phoneNumber)
-        val btnOkDialog = dialogBinding.findViewById<Button>(R.id.okDialButton)
-        val btnCancelDialog = dialogBinding.findViewById<Button>(R.id.cancelDialButton)
+        val btnOkDialog = dialogBinding.okDialButton
+        val btnCancelDialog = dialogBinding.cancelDialButton
 
         btnOkDialog.setOnClickListener {
             contacts = ArrayList(contacts)

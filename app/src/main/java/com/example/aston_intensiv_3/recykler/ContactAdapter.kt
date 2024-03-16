@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.aston_intensiv_3.databinding.ContactItemBinding
 
-
 class ContactAdapter(
     private val onClickAction: (ContactModel) -> Unit,
 ) : ListAdapter<ContactModel, ContactAdapter.ContactViewHolder>(
@@ -18,12 +17,11 @@ class ContactAdapter(
 ) {
     var clickedPosition = -1
     var listPosToDel: MutableList<Int> = mutableListOf<Int>()
-
     var isStartDel: Boolean = false
-
     var selects = Array(150) { false }.toBooleanArray()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
+
         val inflater = LayoutInflater.from(parent.context)
         val binding = ContactItemBinding.inflate(inflater, parent, false)
         val holder = ContactViewHolder(binding)
@@ -31,7 +29,6 @@ class ContactAdapter(
         clickedPosition = holder.adapterPosition
 
 // TODO: убрать тосты
-// TODO: убрать комментарии
         binding.root.setOnClickListener {
 
             clickedPosition = holder.adapterPosition
@@ -39,7 +36,6 @@ class ContactAdapter(
             onClickAction(model)
 
             if (isStartDel) {
-
                 if (!model.isSelected) {
                     model.isSelected = true
                     selects[clickedPosition] = true
@@ -54,10 +50,8 @@ class ContactAdapter(
                 notifyDataSetChanged()
             }
         }
-
         return holder
     }
-
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         val model = getItem(position)
         holder.bind(model)
@@ -70,7 +64,6 @@ class ContactAdapter(
     }
 
     class ContactViewHolder(private val binding: ContactItemBinding) : ViewHolder(binding.root) {
-
         fun bind(model: ContactModel) {
             binding.idTextView.text = model.id.toString()
             binding.firstNameTextView.text = model.firstName
